@@ -20,11 +20,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/" "${CMAKE_CURRENT_SOUR
 
 file(GLOB_RECURSE SOURCES "src/Main.cpp" "deps/Engine/*.cpp" "deps/commander/*.c" "src/Game/Config/*.cpp" "src/Game/Display/*.cpp" "src/Game/Display/Layouts/*.cpp" "src/Game/Entities/*.cpp" "src/Game/States/*.cpp" )
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    find_package(SFML 2 REQUIRED system window graphics network audio)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    find_package(SFML 2 REQUIRED main system window graphics network audio)
-endif() #
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 
 if(SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})
@@ -32,4 +28,4 @@ endif()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} ${SFML_LIBRARIES} ncurses)
+target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-audio)

@@ -2,63 +2,64 @@
 #include <Game/States/GameStateMainMenu.hpp>
 #include <Engine/Flow/StateManager.hpp>
 #include <Engine/Helpers/Utils.hpp>
-#include <Engine/Graphics/Ncurses.hpp>
+#include <Engine/Graphics/SFML.hpp>
 #include <Game/Config/Globals.hpp>
 #include <Game/Entities/Profile.hpp>
 
 GameStateGame::GameStateGame():
-	game(NULL),
-	willQuit(false)
+    game(NULL),
+    willQuit(false)
 { }
 GameStateGame::~GameStateGame()
 { }
 void GameStateGame::load()
 {
-	SAFE_DELETE(this->game);
+    SAFE_DELETE(this->game);
 
-	try {
-		Globals::Profiles::current->scores->load();
-	}
-	catch (ScoreFileException)
-	{
-		// File doesn't exist
-		// ...carry on
-	}
+    try
+    {
+        Globals::Profiles::current->scores->load();
+    }
+    catch (ScoreFileException)
+    {
+        // File doesn't exist
+        // ...carry on
+    }
 
-	this->game = new Game();
-	this->game->start();
+    this->game = new Game();
+    this->game->start();
 }
 void GameStateGame::unload()
 {
-	SAFE_DELETE(this->game);
+    SAFE_DELETE(this->game);
 }
 void GameStateGame::update()
 {
-	if (this->willQuit)
-		StateManager::quit();
+    if (this->willQuit)
+        StateManager::quit();
 
-	this->game->handleInput();
-	this->game->update();
+    this->game->handleInput();
+    this->game->update();
 
-	if (this->game->isOver())
-	{
-		Globals::Profiles::current->scores->handle(&Globals::Profiles::current->scores->score);
-		Globals::Profiles::current->scores->save();
+    if (this->game->isOver())
+    {
+        Globals::Profiles::current->scores->handle(&Globals::Profiles::current->scores->score);
+        Globals::Profiles::current->scores->save();
 
-		Utils::Time::delay_ms(500);
+        Utils::Time::delay_ms(500);
 
-		// Restart the game
-		this->load();
-	}
+        // Restart the game
+        this->load();
+    }
 
-	if (this->game->willQuit())
-		this->willQuit = true;
+    if (this->game->willQuit())
+        this->willQuit = true;
 
-	if (this->game->willReturnToMenu())
-		StateManager::change(new GameStateMainMenu());
+    if (this->game->willReturnToMenu())
+        StateManager::change(new GameStateMainMenu());
 }
 void GameStateGame::draw()
 {
-	this->game->draw();
+    this->game->draw();
 }
 

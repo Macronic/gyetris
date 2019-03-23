@@ -2,6 +2,7 @@
 #define STATEMANAGER_H_DEFINED
 
 #include <Engine/Flow/GameState.hpp>
+#include <Engine/Graphics/SFML.hpp>
 #include <exception>
 
 /// Custom exception that's used to instantly
@@ -9,12 +10,12 @@
 ///
 class StateManagerChangeException : public std::exception
 {
-public:
-	StateManagerChangeException(GameState* newState):
-		newState(newState)
-	{ }
+  public:
+    StateManagerChangeException(GameState* newState):
+        newState(newState)
+    { }
 
-	GameState* newState;
+    GameState* newState;
 };
 
 /// Custom exception for the specific case of
@@ -24,9 +25,9 @@ public:
 ///
 class StateManagerQuitException : public std::exception
 {
-public:
-	StateManagerQuitException()
-	{ }
+  public:
+    StateManagerQuitException()
+    { }
 };
 
 /// Controls all game states.
@@ -39,39 +40,39 @@ public:
 ///
 class StateManager
 {
-public:
-	/// Immediately changes to #newState
-	///
-	/// @note Don't worry, it cleans up the current
-	///       GameState before.
-	///
-	static void change(GameState* newState);
+  public:
+    /// Immediately changes to #newState
+    ///
+    /// @note Don't worry, it cleans up the current
+    ///       GameState before.
+    ///
+    static void change(GameState* newState);
 
-	/// Immediately quits the game.
-	///
-	/// @note Don't worry, it cleans up the current
-	///       GameState before.
-	///
-	static void quit();
+    /// Immediately quits the game.
+    ///
+    /// @note Don't worry, it cleans up the current
+    ///       GameState before.
+    ///
+    static void quit();
 
-	StateManager();
-	virtual ~StateManager();
+    StateManager();
+    virtual ~StateManager();
 
-	/// Initializes pretty much everything,
-	/// setting #initialState to run first.
-	///
-	/// Main entry point to the game and game loop.
-	///
-	/// This is where it all happens. The game never leaves this
-	/// method, the only thing that's allowed to happen are
-	/// state-specific methods called inside here.
-	///
-	/// If we leave this method, the game quits, as seen on
-	/// *main.cpp*.
-	void run(GameState* initialState);
+    /// Initializes pretty much everything,
+    /// setting #initialState to run first.
+    ///
+    /// Main entry point to the game and game loop.
+    ///
+    /// This is where it all happens. The game never leaves this
+    /// method, the only thing that's allowed to happen are
+    /// state-specific methods called inside here.
+    ///
+    /// If we leave this method, the game quits, as seen on
+    /// *main.cpp*.
+    void run(GameState* initialState);
 
-private:
-	GameState* currentState;
+  private:
+    GameState* currentState;
 };
 
 #endif /* STATEMANAGER_H_DEFINED */

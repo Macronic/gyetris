@@ -3,23 +3,21 @@
 #include <Game/Config/Globals.hpp>
 
 LayoutFirstTime::LayoutFirstTime(int width, int height):
-	Layout(width, height)
+    Layout(width, height)
 {
-	this->windowsInit();
+    this->windowsInit();
 }
 LayoutFirstTime::~LayoutFirstTime()
 {
-	this->windowsExit();
+    this->windowsExit();
 }
 void LayoutFirstTime::windowsInit()
 {
-	Layout::windowsInit();
+    Layout::windowsInit();
 }
 void LayoutFirstTime::windowsExit()
 {
-	clear();
-
-	Layout::windowsExit();
+    Layout::windowsExit();
 }
 void LayoutFirstTime::draw()
 {

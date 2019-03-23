@@ -1,5 +1,5 @@
 #include <Engine/Graphics/Layout.hpp>
-#include <Engine/Graphics/Ncurses.hpp>
+#include <Engine/Graphics/SFML.hpp>
 #include <Engine/EngineGlobals.hpp>
 #include <Engine/Helpers/Utils.hpp>
 
@@ -13,60 +13,46 @@ static int intendedWidth;
 static int intendedHeight;
 
 Layout::Layout(int width, int height):
-	main(NULL)
+    main(NULL)
 {
-	intendedWidth  = width;
-	intendedHeight = height;
+    intendedWidth  = width;
+    intendedHeight = height;
 }
 Layout::~Layout()
 { }
 void Layout::windowsInit()
 {
-	clear();
+    // Gets the current width and height of the whole terminal.
+    int current_height = SFML::getHeight();
+    int current_width = SFML::getWidth();
 
-	// Gets the current width and height of the whole terminal.
-	int current_height, current_width;
-	getmaxyx(stdscr, current_height, current_width);
+    // Sets global info
+    Layout::screenWidth  = current_width;
+    Layout::screenHeight = current_height;
 
-	if ((current_width  < intendedWidth) ||
-	    (current_height < intendedHeight))
-	{
-		Ncurses::exit();
-		std::cerr << "Error! Your console screen is smaller than "
-		          << intendedWidth << "x" << intendedHeight << "\n"
-		          << "Please resize your window and try again."
-		          << std::endl;
+    // Creating the main window for this layout.
+    // We'll center based on user's settings
+    int main_x = 0;
+    int main_y = 0;
 
-		exit(EXIT_FAILURE);
-	}
+    if (EngineGlobals::Screen::center_horizontally)
+        main_x = current_width/2 - intendedWidth/2;
 
-	// Sets global info
-	Layout::screenWidth  = current_width;
-	Layout::screenHeight = current_height;
+    if (EngineGlobals::Screen::center_vertically)
+        main_y = current_height/2 - intendedHeight/2;
 
-	// Creating the main window for this layout.
-	// We'll center based on user's settings
-	int main_x = 0;
-	int main_y = 0;
+    this->main = new Window(main_x, main_y, intendedWidth, intendedHeight);
 
-	if (EngineGlobals::Screen::center_horizontally)
-		main_x = current_width/2 - intendedWidth/2;
+    if (! EngineGlobals::Screen::outer_border)
+        this->main->borders(Window::BORDER_NONE);
 
-	if (EngineGlobals::Screen::center_vertically)
-		main_y = current_height/2 - intendedHeight/2;
-
-	this->main = new Window(main_x, main_y, intendedWidth, intendedHeight);
-
-	if (! EngineGlobals::Screen::outer_border)
-		this->main->borders(Window::BORDER_NONE);
-
-	this->main->refresh();
+    this->main->refresh();
 }
 void Layout::windowsExit()
 {
-	SAFE_DELETE(this->main);
+    SAFE_DELETE(this->main);
 }
 void Layout::draw()
 {
-	// When subclassing, make sure to implement this!
+    // When subclassing, make sure to implement this!
 }

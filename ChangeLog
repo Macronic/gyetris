@@ -1,5 +1,8 @@
 All the changes are documented on the git history, so here's just the major ones
 
+24-03-19 v0.1:
+	* Interface: Now the game is running on SFML, without ncurses! There still might be some ncurses includes, but after dealing with them, it should be compilable on Windows.
+
 10-10-14 v2.3.0:
 	* Gameplay: Now the game supports high score!
 	* Development: Completely changed the source code
