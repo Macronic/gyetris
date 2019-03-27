@@ -12,80 +12,21 @@ bool Utils::File::exists(std::string path)
 {
 	return (Utils::File::size(path) != -1);
 }
-off_t Utils::File::size(std::string path)
+long long int Utils::File::size(std::string path)
 {
-	struct stat s;
-
-	if (stat(path.c_str(), &s) < 0)
-		return -1;
-
-	return s.st_size;
+    return 0;
 }
 void Utils::File::mkdir_p(std::string path)
 {
-	std::string tmp(path);
 
-	if (Utils::String::back(tmp) == '/')
-		tmp[tmp.size() - 1] = '\0';
-
-	for (std::string::iterator p = tmp.begin();
-	     (*p) != '\0';
-	     p++)
-	{
-		if (*p == '/')
-		{
-			*p = '\0';
-			mkdir(tmp.c_str(), S_IRWXU);
-			*p = '/';
-		}
-	}
-	mkdir(tmp.c_str(), S_IRWXU);
 }
 void Utils::File::rm_rf(std::string path)
 {
-	if (! Utils::File::isDirectory(path))
-		return;
 
-	// Another BIG UGY HACK
-	//
-	// Since my program's already non-portable
-	// (POSIX systems only) and I don't have the
-	// time nor means to either use Boost or
-	// implement my own file functions, I'll
-	// have to do a big hack.
-	//
-	// It's ugly, please ignore this function.
-	//
-	// I can't believe you're still reading.
-	// Please don't continue from here.
-	//
-	// I've dishounored my family.
-	// So ashamed of myself.
-	//
-	//
-	// Next thing you know we're throwing gotos
-	// everywhere.
-	//
-	//
-	//
-	// Still reading?
-	//
-	// ...OK, I've warned you
-
-	std::string command("rm -rf " + path);
-
-	system(command.c_str());
 }
 void Utils::File::rm_f(std::string path)
 {
-	if (Utils::File::isDirectory(path))
-		return;
 
-	// This is ALSO another big hack.
-	// God-dang it
-	std::string command("rm -f " + path);
-
-	system(command.c_str());
 }
 
 bool Utils::File::create(std::string path)

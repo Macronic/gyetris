@@ -8,7 +8,7 @@
 // Local functino that returns current microsecond
 // amount since the Epoch.
 //
-static suseconds_t get_ticks()
+static long long int get_ticks()
 {
 	struct timeval tmp;
 	gettimeofday(&(tmp), NULL);
@@ -58,7 +58,7 @@ bool Timer::isPaused()
 {
     return this->paused;
 }
-suseconds_t Timer::delta_us()
+long long int Timer::delta_us()
 {
     if (this->isRunning())
 	    return get_ticks() - this->startMark;
@@ -72,11 +72,11 @@ suseconds_t Timer::delta_us()
 
     return (this->pausedMark) - (this->startMark);
 }
-suseconds_t Timer::delta_ms()
+long long int Timer::delta_ms()
 {
     return this->delta_us() / 1000;
 }
-suseconds_t Timer::delta_s()
+long long int Timer::delta_s()
 {
     return this->delta_ms() / 1000;
 }

@@ -15,7 +15,7 @@ ColorPair EngineGlobals::Theme::dim_dim_text;
 ColorPair EngineGlobals::Theme::textbox;
 
 sf::Font* EngineGlobals::Graphics::font = nullptr;
-int EngineGlobals::Graphics::fontSize = 20;
+int EngineGlobals::Graphics::fontSize = 12;
 
 void EngineGlobals::init()
 {

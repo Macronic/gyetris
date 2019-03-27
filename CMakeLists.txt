@@ -11,7 +11,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -O0 ")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules/"  "/usr/share/SFML/cmake/Modules/")
 endif()
-
+set(SFML_DIR "C:/SFML/lib/cmake/SFML/") #your SFML directory
 set(HEADERS
    ${HEADERS}
 )

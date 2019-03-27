@@ -89,6 +89,7 @@ void Window::resize(int w, int h)
 void Window::print(std::string str, int x, int y, ColorPair pair)
 {
     sf::Text text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize);
+    text.setColor(sf::Color(255, 255, 255));
     text.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
     renderTarget->draw(text);
     // Colors::pairActivate(this->renderTarget, pair);

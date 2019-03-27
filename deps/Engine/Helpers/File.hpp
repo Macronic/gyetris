@@ -25,7 +25,7 @@ namespace Utils
 		///
 		/// @return It's size or -1 if it doesn't exist
 		///         (or something strange happened).
-		off_t size(std::string path);
+        long long int size(std::string path);
 
 		/// Creates #path directory hierarchy recursively,
 		/// just like UNIX command `mkdir -p`.
