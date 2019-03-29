@@ -6,7 +6,7 @@ This readme is under construction (as well as gyetris).
 
 Current progress is a playable version run in a window with help from SFML library, without any ncurses depedency!
 
-![gyetris v0.1](https://i.imgur.com/y5Q3crg.png)
+![gyetris v0.1a](https://i.imgur.com/szmjlzL.png)
 
 ## License
 
