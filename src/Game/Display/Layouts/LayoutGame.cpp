@@ -77,7 +77,7 @@ void LayoutGame::windowsInit()
     this->middle_left = new Window(this->main,
                                    this->leftmost->getX() + this->leftmost->getW(),
                                    0,
-                                   10*2 + 2, // 10 blocks + borders
+                                   10 + 2, // 10 blocks + borders
                                    22);      // 20 blocks + borders
 
     // The actual game border, inside that container.
@@ -97,7 +97,7 @@ void LayoutGame::windowsInit()
 
     // First next piece
     this->next.resize(Globals::Profiles::current->settings.game.next_pieces);
-    this->next[0] = new Window(this->middle_right, 0, 0, 0, 2);
+    this->next[0] = new Window(this->middle_right, 0, 0, 0, 3);
     this->next[0]->borders(Window::BORDER_NONE);
 
     // The rest of the next pieces
@@ -105,9 +105,9 @@ void LayoutGame::windowsInit()
     {
         this->next[i] = new Window(this->middle_right,
                                    0,
-                                   this->next[i - 1]->getY() + this->next[i - 1]->getH() + 1,
+                                   this->next[i - 1]->getY() + this->next[i - 1]->getH(),
                                    0,
-                                   2);
+                                   3);
 
         this->next[i]->borders(Window::BORDER_NONE);
     }

@@ -34,7 +34,7 @@ namespace SFML
         {
             switch (event.type)
             {
-                    // window closed
+                case sf::Event::Closed:
                     window->close();
                     exit();
                     break;

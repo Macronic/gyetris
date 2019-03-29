@@ -48,8 +48,8 @@ Window::Window(Window* parent, int x, int y, int width, int height):
         if (x == 0) x = 1;
         if (y == 0) y = 1;
 
-        if (width  == 0) width  = parent->width  - 2;
-        if (height == 0) height = parent->height - 2;
+        if (width  == 0) width  = parent->width  - 1;
+        if (height == 0) height = parent->height - 1;
     }
 
     this->x = x;
@@ -89,15 +89,9 @@ void Window::resize(int w, int h)
 void Window::print(std::string str, int x, int y, ColorPair pair)
 {
     sf::Text text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize);
-    text.setColor(sf::Color(255, 255, 255));
+    text.setColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
     text.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
     renderTarget->draw(text);
-    // Colors::pairActivate(this->renderTarget, pair);
-
-    //if (! str.empty())
-    // Ncurses has this strange habit of
-    // switching X and Y coordinates...
-    //  mvwaddstr(this->renderTarget, y, x, str.c_str());
 }
 void Window::print(std::vector<std::string> lines, int x, int y, ColorPair pair)
 {
@@ -109,11 +103,12 @@ void Window::printChar(int c, int x, int y, ColorPair pair)
     std::string string = "a";
     string[0] = c;
     print(string, x, y, pair);
-    //Colors::pairActivate(this->renderTarget, pair);
+}
 
-    // Ncurses has this strange habit of
-    // switching X and Y coordinates...
-    // mvwaddch(this->renderTarget, y, x, c);
+void Window::draw(sf::Drawable& drawable, sf::Transformable& transformable, sf::Vector2f position)
+{
+    transformable.setPosition(position + sf::Vector2f(borderType == BORDER_NONE ? sf::Vector2f() : sf::Vector2f(1, 1)));
+    this->renderTarget->draw(drawable);
 }
 
 void Window::draw(sf::Drawable& drawable)
@@ -123,7 +118,20 @@ void Window::draw(sf::Drawable& drawable)
 
 void Window::refresh()
 {
+    if (borderType != BORDER_NONE)
+    {
+        sf::RectangleShape border;
+        border.setSize(sf::Vector2f(width * EngineGlobals::Graphics::fontSize-4, height * EngineGlobals::Graphics::fontSize-4));
+        border.setFillColor(sf::Color::Transparent);
+        border.setOutlineColor(sf::Color(255, 255, 255, 70));
+        border.setOutlineThickness(1);
+        border.setPosition(2, 2);
+
+        this->renderTarget->draw(border);
+    }
+
     this->renderTarget->display();
+
     sf::Sprite sprite;
     sprite.setPosition(this->x*EngineGlobals::Graphics::fontSize, this->y*EngineGlobals::Graphics::fontSize);
     sprite.setTexture(this->renderTarget->getTexture());
@@ -134,7 +142,7 @@ void Window::refresh()
     }
     else
     {
-        parent->draw(sprite);
+        parent->draw(sprite, sprite, sf::Vector2f(this->x*EngineGlobals::Graphics::fontSize, this->y*EngineGlobals::Graphics::fontSize));
     }
 
     // Previously it was:

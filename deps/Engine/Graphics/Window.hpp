@@ -67,6 +67,7 @@ class Window
     /// EngineGlobals settings
     void setBorders();
     void draw(sf::Drawable& drawable);
+    void draw(sf::Drawable& drawable, sf::Transformable& transformable, sf::Vector2f position);
 
     void horizontalLine(int x, int y, int c, int width, ColorPair pair);
 
