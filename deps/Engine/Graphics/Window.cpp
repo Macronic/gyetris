@@ -89,8 +89,12 @@ void Window::resize(int w, int h)
 void Window::print(std::string str, int x, int y, ColorPair pair)
 {
     sf::Text text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize);
-    text.setColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
+    text.setColor(sf::Color(pair.foreground.red, pair.foreground.green, pair.foreground.blue));
     text.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+    sf::RectangleShape rectangle(sf::Vector2f(str.length() * EngineGlobals::Graphics::fontSize, 1 * EngineGlobals::Graphics::fontSize));
+    rectangle.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+    rectangle.setFillColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
+    renderTarget->draw(rectangle);
     renderTarget->draw(text);
 }
 void Window::print(std::vector<std::string> lines, int x, int y, ColorPair pair)

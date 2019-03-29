@@ -6,9 +6,9 @@
 
 Color::Color(std::string name):
     name(name),
-    red(-1),
-    green(-1),
-    blue(-1)
+    red(0),
+    green(0),
+    blue(0)
 { }
 
 std::string Color::toString()
@@ -51,6 +51,8 @@ Color Color::fromString(std::string str)
 
 
 ColorPair::ColorPair():
+    foreground(Colors::name("white")),
+    background(Colors::name("default")),
     bold(false)
 { }
 
@@ -166,14 +168,14 @@ Color Colors::name(std::string str)
     if (str.empty())
         return color;
 
-    if (str == "default")      color = Colors::rgb(255, 255, 255);
+    if (str == "default")      color = Colors::rgb(0, 0, 0);
     else if (str == "black")   color = Colors::rgb(0, 0, 0);
-    else if (str == "red")     color = Colors::rgb(255, 40, 40);
-    else if (str == "green")   color = Colors::rgb(40, 255, 40);
-    else if (str == "yellow")  color = Colors::rgb(255, 255, 40);
-    else if (str == "blue")    color = Colors::rgb(40, 40, 255);
-    else if (str == "magenta") color = Colors::rgb(255, 40, 255);
-    else if (str == "cyan")    color = Colors::rgb(40, 255, 255);
+    else if (str == "red")     color = Colors::rgb(190, 40, 40);
+    else if (str == "green")   color = Colors::rgb(40, 190, 40);
+    else if (str == "yellow")  color = Colors::rgb(190, 190, 40);
+    else if (str == "blue")    color = Colors::rgb(40, 40, 190);
+    else if (str == "magenta") color = Colors::rgb(190, 40, 190);
+    else if (str == "cyan")    color = Colors::rgb(40, 190, 190);
     else if (str == "white")   color = Colors::rgb(255, 255, 255);
 
     color.name = str;
