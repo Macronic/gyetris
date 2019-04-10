@@ -16,9 +16,9 @@ set(HEADERS
    ${HEADERS}
 )
 
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/" "${CMAKE_CURRENT_SOURCE_DIR}/deps" "${CMAKE_CURRENT_SOURCE_DIR}/src")
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include/" "${CMAKE_CURRENT_SOURCE_DIR}/deps/" "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
-file(GLOB_RECURSE SOURCES "src/Main.cpp" "deps/Engine/*.cpp" "deps/commander/*.c" "src/Game/Config/*.cpp" "src/Game/Display/*.cpp" "src/Game/Display/Layouts/*.cpp" "src/Game/Entities/*.cpp" "src/Game/States/*.cpp" )
+file(GLOB_RECURSE SOURCES "src/Main.cpp" "deps/Engine/*.cpp" "deps/GUI/*.cpp" "deps/commander/*.c" "src/Game/Config/*.cpp" "src/Game/Display/*.cpp" "src/Game/Display/Layouts/*.cpp" "src/Game/Entities/*.cpp" "src/Game/States/*.cpp" )
 
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 

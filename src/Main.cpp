@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
         GameState* firstGameState = NULL;
 
         // Trying to load default profile from config files
-        if (! Profile::load())
+        if (!Profile::load())
         {
             // Couldn't find any profiles - first time!
             Globals::Profiles::default_name = "";

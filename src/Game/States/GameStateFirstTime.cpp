@@ -10,7 +10,7 @@
 #include <cstring>
 
 GameStateFirstTime::GameStateFirstTime():
-    layout(NULL),
+    layout(nullptr),
     name("")
 { }
 GameStateFirstTime::~GameStateFirstTime()
@@ -27,34 +27,32 @@ void GameStateFirstTime::unload()
 
 void GameStateFirstTime::update()
 {
-    // User typed already
-    if (! this->name.empty())
+    if (!this->name.empty())
     {
         Globals::Profiles::current = new Profile(this->name);
         StateManager::change(new GameStateMainMenu());
     }
 }
-#include <iostream>
+
+bool GameStateFirstTime::handleEvent(sf::Event event)
+{
+    switch (event.type)
+    {
+        case sf::Event::KeyPressed:
+            if (event.key.code == sf::Keyboard::Return)
+            {
+                name = this->layout->getUserName();
+                return true;
+            }
+            break;
+        default:
+            break;
+    }
+    return false;
+}
+
 void GameStateFirstTime::draw()
 {
-    // BIG HACK
-    //
-    // As in yetris, there's for now a hack. Making new profile is in terminal!
-
-    std::cout <<
-              "Hello, there!\n"
-              "It seems this is your first time running yetris.\n"
-              "\n"
-              "Please enter a profile name.\n"
-              "It'll store all your settings, scores and game statistics.\n";
-
-    std::cout << "Provide your name: " << std::endl;;
-    std::string name;
-    std::cin >> name;
-
-    if (Profile::isNameValid(name))
-    {
-        this->name = name;
-    }
+    this->layout->draw();
 }
 

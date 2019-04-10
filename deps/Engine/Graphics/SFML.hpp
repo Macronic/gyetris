@@ -1,7 +1,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <Engine/EngineGlobals.hpp>
-
+#include <GUI/EventHandler.h>
 #ifndef SFML_H_DEFINED
 #define SFML_H_DEFINED
 
@@ -12,7 +12,7 @@ namespace SFML
     /// The whole Engine depends on this.
     bool init();
 
-    /// Quits Ncurses mode.
+    /// Quits Ncurses mode.s
     ///
     /// Make sure to call it at the end of the game,
     /// otherwise the terminal will be left at a
@@ -28,6 +28,9 @@ namespace SFML
     /// @note It's #int because nCurses uses some other
     ///       values that don't fit on a #char variable.
     int getInput(int delay_ms=-1);
+
+    void addEventHandler(EventHandler* handler);
+    void removeEventHandler(EventHandler* handler);
 
     size_t getHeight();
     size_t getWidth();
