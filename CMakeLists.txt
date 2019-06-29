@@ -6,8 +6,8 @@ add_compile_definitions(VERSION="2.3.0")
 add_compile_definitions(DATE="2019.03.16")
 #TO DO: unhardcode date
 add_compile_definitions(PACKAGE="${PROJECT_NAME}")
-
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall -O0 ")
+#-lc++fs
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -O0")
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(CMAKE_MODULE_PATH "${CMAKE_ROOT}/Modules/"  "/usr/share/SFML/cmake/Modules/")
 endif()

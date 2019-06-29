@@ -5,28 +5,23 @@
 #include <iostream>
 
 Window::Window(int x, int y, int w, int h):
-    renderTarget(nullptr),
     parent(nullptr),
     x(x),
     y(y),
     width(w),
     height(h),
+    drawQueue(new DrawQueue),
     borderType(BORDER_NONE),
     topLeftTitle(""),
     topRightTitle(""),
     bottomLeftTitle(""),
     bottomRightTitle("")
 {
-    sf::RenderTexture* newTarget = new sf::RenderTexture;
-    newTarget->create(width * EngineGlobals::Graphics::fontSize, height * EngineGlobals::Graphics::fontSize);
-
-    this->renderTarget = newTarget;
-
     this->setBorders();
 }
 
 Window::Window(Window* parent, int x, int y, int width, int height):
-    renderTarget(nullptr),
+    drawQueue(new DrawQueue),
     borderType(BORDER_NONE),
     topLeftTitle(""),
     topRightTitle(""),
@@ -57,46 +52,35 @@ Window::Window(Window* parent, int x, int y, int width, int height):
     this->width  = width;
     this->height = height;
 
-    sf::RenderTexture* newTarget = new sf::RenderTexture;
-    newTarget->create(width * EngineGlobals::Graphics::fontSize, height * EngineGlobals::Graphics::fontSize);
-
-    this->renderTarget = newTarget;
     this->parent = parent;
     this->setBorders();
 }
-Window::~Window()
-{
-    if (this->renderTarget != nullptr)
-        delete renderTarget;
-    renderTarget = nullptr;
-}
+
+Window::~Window() { }
 
 void Window::resize(int w, int h)
 {
-    if (this->renderTarget != nullptr)
-        delete renderTarget;
-
     this->width  = w;
     this->height = h;
 
     sf::RenderTexture* newTarget = new sf::RenderTexture;
     newTarget->create(width * EngineGlobals::Graphics::fontSize, height * EngineGlobals::Graphics::fontSize);
 
-    this->renderTarget = newTarget;
-
 }
 
 void Window::print(std::string str, int x, int y, ColorPair pair)
 {
-    sf::Text text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize);
-    text.setColor(sf::Color(pair.foreground.red, pair.foreground.green, pair.foreground.blue));
-    text.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
-    sf::RectangleShape rectangle(sf::Vector2f(str.length() * EngineGlobals::Graphics::fontSize, 1 * EngineGlobals::Graphics::fontSize));
-    rectangle.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
-    rectangle.setFillColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
-    renderTarget->draw(rectangle);
-    renderTarget->draw(text);
+    auto text = std::shared_ptr<sf::Text>(new sf::Text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize));
+    text->setFillColor(sf::Color(pair.foreground.red, pair.foreground.green, pair.foreground.blue));
+    text->setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+    auto rectangle = std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(str.length() * EngineGlobals::Graphics::fontSize, 1 * EngineGlobals::Graphics::fontSize)));
+    rectangle->setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+    rectangle->setFillColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
+
+    drawQueue->add(rectangle);
+    drawQueue->add(text);
 }
+
 void Window::print(std::vector<std::string> lines, int x, int y, ColorPair pair)
 {
     for (size_t i = 0; i < lines.size(); i++)
@@ -109,63 +93,45 @@ void Window::printChar(int c, int x, int y, ColorPair pair)
     print(string, x, y, pair);
 }
 
-void Window::draw(sf::Drawable& drawable, sf::Transformable& transformable, sf::Vector2f position)
+void Window::draw(std::shared_ptr<sf::Drawable> drawable, sf::Transformable& transformable, sf::Vector2f position)
 {
     transformable.setPosition(position + sf::Vector2f(borderType == BORDER_NONE ? sf::Vector2f() : sf::Vector2f(1, 1)));
-    this->renderTarget->draw(drawable);
+    drawQueue->add(drawable);
 }
 
-void Window::draw(sf::Drawable& drawable)
+void Window::draw(std::shared_ptr<sf::Drawable> drawable)
 {
-    this->renderTarget->draw(drawable);
+    drawQueue->add(drawable);
 }
 
 void Window::refresh()
 {
     if (borderType != BORDER_NONE)
     {
-        sf::RectangleShape border;
-        border.setSize(sf::Vector2f(width * EngineGlobals::Graphics::fontSize-4, height * EngineGlobals::Graphics::fontSize-4));
-        border.setFillColor(sf::Color::Transparent);
-        border.setOutlineColor(sf::Color(255, 255, 255, 70));
-        border.setOutlineThickness(1);
-        border.setPosition(2, 2);
+        auto border = std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape);
+        border->setSize(sf::Vector2f(width * EngineGlobals::Graphics::fontSize-4, height * EngineGlobals::Graphics::fontSize-4));
+        border->setFillColor(sf::Color::Transparent);
+        border->setOutlineColor(sf::Color(255, 255, 255, 70));
+        border->setOutlineThickness(1);
+        border->setPosition(2, 2);
 
-        this->renderTarget->draw(border);
+        drawQueue->add(border);
     }
 
-    this->renderTarget->display();
-
-    sf::Sprite sprite;
-    sprite.setPosition(this->x*EngineGlobals::Graphics::fontSize, this->y*EngineGlobals::Graphics::fontSize);
-    sprite.setTexture(this->renderTarget->getTexture());
+    drawQueue->setPosition(sf::Vector2i(this->x*EngineGlobals::Graphics::fontSize, this->y*EngineGlobals::Graphics::fontSize));
 
     if (parent == nullptr)
     {
-        SFML::drawTarget(&sprite);
+        SFML::drawTarget(drawQueue.get());
     }
     else
     {
-        parent->draw(sprite, sprite, sf::Vector2f(this->x*EngineGlobals::Graphics::fontSize, this->y*EngineGlobals::Graphics::fontSize));
+        parent->draw(drawQueue);
     }
-
-    // Previously it was:
-    //
-    //wrefresh(this->win);
-    //
-    // I've changed all calls to wrefresh() to wnoutrefresh
-    // because when I have several WINDOW*, it gets heavy
-    // to do the former.
-    //
-    // As a tradeoff, I need to call `refresh()` at the end
-    // of every draw cycle.
-    //
-    //wnoutrefresh(this->win);
 }
 void Window::clear()
 {
-    renderTarget->clear();//werase(this->win);
-
+    drawQueue->clear();
     // Redrawing borders if existing
     if (this->borderType != BORDER_NONE)
         this->borders(this->borderType);
@@ -255,9 +221,9 @@ void Window::setBorders()
 }
 void Window::horizontalLine(int x, int y, int c, int width, ColorPair pair)
 {
-    sf::RectangleShape line(sf::Vector2f(width * EngineGlobals::Graphics::fontSize, EngineGlobals::Graphics::fontSize));
-    line.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
-    this->renderTarget->draw(line);
+    auto line = std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(width * EngineGlobals::Graphics::fontSize, EngineGlobals::Graphics::fontSize)));
+    line->setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+    drawQueue->add(line);
 }
 void Window::setTitle(std::string title, WindowTitlePosition position)
 {

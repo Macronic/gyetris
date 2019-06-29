@@ -10,7 +10,7 @@
 class LayoutFirstTime: public Layout
 {
 
-    ArcadeTextBox textBox;
+    std::shared_ptr<ArcadeTextBox> textBox;
 
   public:
     LayoutFirstTime(int width, int height);

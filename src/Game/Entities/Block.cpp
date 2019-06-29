@@ -14,11 +14,11 @@ void Block::draw(Window* win, int x, int y)
 {
     if (!win)
         return;
-    sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(EngineGlobals::Graphics::fontSize, EngineGlobals::Graphics::fontSize));
-    rectangle.setOutlineColor(sf::Color(color.background.red, color.background.green, color.background.blue));
-    rectangle.setFillColor(sf::Color(color.background.red, color.background.green, color.background.blue));
-    rectangle.setPosition((x + 0.5) * EngineGlobals::Graphics::fontSize, (y + 0.5) * EngineGlobals::Graphics::fontSize);
+    auto rectangle = std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape);
+    rectangle->setSize(sf::Vector2f(EngineGlobals::Graphics::fontSize, EngineGlobals::Graphics::fontSize));
+    rectangle->setOutlineColor(sf::Color(color.background.red, color.background.green, color.background.blue));
+    rectangle->setFillColor(sf::Color(color.background.red, color.background.green, color.background.blue));
+    rectangle->setPosition((x + 0.5) * EngineGlobals::Graphics::fontSize, (y + 0.5) * EngineGlobals::Graphics::fontSize);
     win->draw(rectangle);
 }
 

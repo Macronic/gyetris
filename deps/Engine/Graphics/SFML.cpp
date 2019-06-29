@@ -14,7 +14,7 @@ namespace SFML
             delete SFML::window;
 
         SFML::window = new sf::RenderWindow;
-        SFML::window->create(sf::VideoMode(80 * EngineGlobals::Graphics::fontSize, 30 * EngineGlobals::Graphics::fontSize), "gyetris");
+        SFML::window->create(sf::VideoMode(80 * EngineGlobals::Graphics::fontSize, 40 * EngineGlobals::Graphics::fontSize), "gyetris");
 
         return true;
     }
@@ -55,7 +55,8 @@ namespace SFML
                     window->close();
                     exit();
                     break;
-
+                case sf::Event::Resized:
+                    window->setSize(sf::Vector2u(event.size.width, event.size.height));
                 case sf::Event::KeyPressed:
                     return event.key.code;
                     break;

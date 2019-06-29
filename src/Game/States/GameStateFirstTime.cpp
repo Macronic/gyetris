@@ -17,7 +17,7 @@ GameStateFirstTime::~GameStateFirstTime()
 { }
 void GameStateFirstTime::load()
 {
-    this->layout = new LayoutFirstTime(80, 24);
+    this->layout = new LayoutFirstTime(SFML::getWidth(), SFML::getHeight());
 }
 
 void GameStateFirstTime::unload()

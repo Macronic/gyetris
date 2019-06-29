@@ -90,7 +90,7 @@ GameStateMainMenu::~GameStateMainMenu()
 { }
 void GameStateMainMenu::load()
 {
-    this->layout = new LayoutMainMenu(80, 24, this);
+    this->layout = new LayoutMainMenu(SFML::getWidth(), SFML::getHeight(), this);
 
     createMainMenu();
     createSinglePlayerMenu();

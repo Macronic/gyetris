@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "DrawQueue.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 #include <Engine/Graphics/SFML.hpp>
@@ -66,8 +67,8 @@ class Window
     /// Applies a board style dependent on the
     /// EngineGlobals settings
     void setBorders();
-    void draw(sf::Drawable& drawable);
-    void draw(sf::Drawable& drawable, sf::Transformable& transformable, sf::Vector2f position);
+    void draw(std::shared_ptr<sf::Drawable> drawable);
+    void draw(std::shared_ptr<sf::Drawable> drawable, sf::Transformable& transformable, sf::Vector2f position);
 
     void horizontalLine(int x, int y, int c, int width, ColorPair pair);
 
@@ -86,7 +87,6 @@ class Window
     void setTitle(std::string title, WindowTitlePosition position=Window::TOP_LEFT);
 
   protected:
-    sf::RenderTexture* renderTarget;
     Window* parent;
 
     int x;
@@ -94,7 +94,7 @@ class Window
     int width;
     int height;
 
-
+    std::shared_ptr<DrawQueue> drawQueue;
 
     BorderType borderType;
 

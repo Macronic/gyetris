@@ -3,7 +3,8 @@
 #include <Game/Config/Globals.hpp>
 
 LayoutFirstTime::LayoutFirstTime(int width, int height):
-    Layout(width, height)
+    Layout(width, height),
+    textBox(new ArcadeTextBox)
 {
     this->windowsInit();
 }
@@ -13,7 +14,7 @@ LayoutFirstTime::~LayoutFirstTime()
 }
 void LayoutFirstTime::windowsInit()
 {
-    textBox.setCharacterSize(40);
+    textBox->setCharacterSize(40);
     Layout::windowsInit();
 }
 void LayoutFirstTime::windowsExit()
@@ -23,7 +24,7 @@ void LayoutFirstTime::windowsExit()
 
 std::string LayoutFirstTime::getUserName()
 {
-    return textBox.getText();
+    return textBox->getText();
 }
 
 void LayoutFirstTime::draw()
@@ -37,19 +38,19 @@ void LayoutFirstTime::draw()
 
     main->clear();
 
-    textBox.update();
+    textBox->update();
 
-    sf::Vector2f textBoxPosition = sf::Vector2f((Layout::screenWidth * EngineGlobals::Graphics::fontSize - textBox.getSize().x) / 2,
+    sf::Vector2f textBoxPosition = sf::Vector2f((Layout::screenWidth * EngineGlobals::Graphics::fontSize - textBox->getSize().x) / 2,
                                    (Layout::screenHeight * EngineGlobals::Graphics::fontSize - 40) / 2);
 
-    textBox.setPosition(textBoxPosition);
+    textBox->setPosition(textBoxPosition);
 
-    sf::Text helloText;
-    helloText.setString(gyetrisHello);
-    helloText.setFont(*EngineGlobals::Graphics::font);
+    auto helloText = std::shared_ptr<sf::Text>(new sf::Text);
+    helloText->setString(gyetrisHello);
+    helloText->setFont(*EngineGlobals::Graphics::font);
 
-    sf::Rect<float> helloTextBounds = helloText.getLocalBounds();
-    helloText.setPosition(sf::Vector2f((Layout::screenWidth * EngineGlobals::Graphics::fontSize - helloTextBounds.width) / 2, textBoxPosition.y - helloTextBounds.height - 20));
+    sf::Rect<float> helloTextBounds = helloText->getLocalBounds();
+    helloText->setPosition(sf::Vector2f((Layout::screenWidth * EngineGlobals::Graphics::fontSize - helloTextBounds.width) / 2, textBoxPosition.y - helloTextBounds.height - 20));
 
     main->draw(helloText);
     main->draw(textBox);

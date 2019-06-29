@@ -49,7 +49,7 @@ void Game::start()
     this->userAskedToGoToMenu = false;
     this->gameOver            = false;
 
-    this->layout = new LayoutGame(this, 80, 24);
+    this->layout = new LayoutGame(this, SFML::getWidth(), SFML::getHeight());
 
     // Creating the board and adding noise.
     this->board = new Board(0, 0, DEFAULT_BOARD_WIDTH, DEFAULT_BOARD_HEIGHT);

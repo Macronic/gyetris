@@ -24,8 +24,8 @@ void EngineGlobals::init()
     EngineGlobals::Graphics::font = new sf::Font;
     EngineGlobals::Graphics::font->loadFromFile("VCR_OSD_MONO_1.001.ttf");
 
-    EngineGlobals::Screen::center_horizontally = true;
-    EngineGlobals::Screen::center_vertically   = true;
+    EngineGlobals::Screen::center_horizontally = false;
+    EngineGlobals::Screen::center_vertically   = false;
 
     EngineGlobals::Screen::show_borders  = true;
     EngineGlobals::Screen::fancy_borders = true;

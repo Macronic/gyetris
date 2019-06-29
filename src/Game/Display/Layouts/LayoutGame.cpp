@@ -174,7 +174,7 @@ void LayoutGame::windowsInit()
         this->animation = new AnimationGameOfLife(this->board);
 
     else
-        this->animation = NULL;
+        this->animation = nullptr;
 
     if (this->animation)
         this->animation->load();
@@ -324,8 +324,6 @@ void LayoutGame::draw(Menu* menu)
         int minutes = (delta_s / 60) % 60;
         int hours   = ((delta_s / 60) / 60) % 24;
 
-        //Colors::pairActivate(this->rightmost->win, EngineGlobals::Theme::text);
-
         snprintf(buff, sizeof(buff), "%02d:%02d:%02d", hours, minutes, seconds);
         std::string buffAsStdStr = buff;
         this->rightmost->print(buff, 8, 10, EngineGlobals::Theme::hilite_text);
@@ -333,7 +331,7 @@ void LayoutGame::draw(Menu* menu)
 
         this->rightmost->print(std::to_string(this->game->getDelay(Globals::Profiles::current->scores->score.level)), 8, 12);
 
-        this->rightmost->print("yetris v" VERSION, 1, this->rightmost->getH() - 2, EngineGlobals::Theme::hilite_text);
+        this->rightmost->print("gyetris v" VERSION, 1, this->rightmost->getH() - 2, EngineGlobals::Theme::hilite_text);
 
         this->rightmost->print("H", this->rightmost->getW() - 5, this->rightmost->getH() - 2, EngineGlobals::Theme::hilite_hilite_text);
         this->rightmost->print("elp", this->rightmost->getW() - 4, this->rightmost->getH() - 2, EngineGlobals::Theme::hilite_text);
