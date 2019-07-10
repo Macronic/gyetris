@@ -33,7 +33,8 @@ int main(int argc, char* argv[])
         Globals::init();
         Arguments::parse(argc, argv);
 
-        Utils::Random::seed();
+        Utils::Random::init();
+
         SFML::init();
         Colors::init();
 
@@ -68,40 +69,11 @@ int main(int argc, char* argv[])
         // Alright, start the game!
         // This has the game loop inside.
         StateManager states;
-        states.run(firstGameState);
+        states.run(firstGameState, Globals::Profiles::current->getAnimation(nullptr));
 
         // And now the game's quitting.
-        // Right before that, we must save current user's settings
-        Globals::Profiles::current->saveSettings();
-
-        // And set the current profile as the default to load next time.
-        //
-        // TODO: This is ugly as fuark, all this stuff shouldn't
-        //       be here on `main()`.
-        INI::Parser* ini;
-        try
-        {
-            ini = new INI::Parser(Globals::Config::file);
-        }
-        catch(std::runtime_error& e)
-        {
-            // File doesn't exist!
-            // Silently create
-            ini = new INI::Parser();
-            ini->create();
-        }
-        ini->top().addGroup("profiles");
-        (*ini)("profiles").addKey("default", Globals::Profiles::current->name);
-        try
-        {
-            ini->saveAs(Globals::Config::file);
-        }
-        catch(std::runtime_error& e)
-        {
-            // Couldn't save the file...
-            // ...do nothing
-        }
-        SAFE_DELETE(ini);
+        // Right before that, we must save current user's settings and set the current profile as default
+        Globals::Profiles::current->save();
 
         SFML::exit();
     }

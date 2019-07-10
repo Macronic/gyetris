@@ -23,15 +23,15 @@ struct Color
 
     /// Red component of the color, from 0 to 255.
     /// @note If it's -1, means use the name string.
-    int red;
+    unsigned char red;
 
     /// Green component of the color, from 0 to 255.
     /// @note If it's -1, means use the name string.
-    int green;
+    unsigned char green;
 
     /// Blue component of the color, from 0 to 255.
     /// @note If it's -1, means use the name string.
-    int blue;
+    unsigned char blue;
 
     /// Internal value for the Ncurses library.
     /// Don't mess with it.

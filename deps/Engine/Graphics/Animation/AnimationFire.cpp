@@ -15,133 +15,174 @@ static ColorPair yellowBold = Colors::pair("yellow", "default", true);
 
 static int gray_scale_size = 12;
 static char gray_scale[13] = " .':-=+*#%@#";
+static int intensity_normal = 13;
+static int intensity_more = 20;
+static int clearDelay = 5;
 
 AnimationFire::AnimationFire(Window* window):
-	Animation(window),
-	particle(NULL)
+    Animation(window),
+    particle(NULL),
+    burstTimeLeft(0),
+    played(false)
 { }
 AnimationFire::~AnimationFire()
 {
-	SAFE_DELETE(particle);
+    SAFE_DELETE(particle)
 }
 void AnimationFire::load()
 {
-	unsigned int width  = window->getW();
-	unsigned int height = window->getH();
+    unsigned int width  = window->getW();
+    unsigned int height = window->getH();
 
-	particle = new Array2D<ParticleFire>(width, height);
 
-	// Creating the cooling map
-	coolingMap = new Array2D<int>(width, height);
+    particle = new Array2D<ParticleFire>(width, height);
 
-	for (unsigned int i = 0; i < width; i++)
-		for (unsigned int j = 0; j < height; j++)
-			coolingMap->set(i, j, Utils::Random::between(INTENSITY_MIN,
-			                                             INTENSITY_PERCENT(13)));
+    // Creating the cooling map
+    coolingMap = new Array2D<int>(width, height);
 
-	// Will smooth the cooling map a number of times
-	for (int n = 0; n < 10; n++)
-		for (unsigned int i = 1; i < width-1; i++)
-			for (unsigned int j = 1; j < height-1; j++)
-				coolingMap->set(i, j, (coolingMap->at(i-1, j) +
-				                       coolingMap->at(i+1, j) +
-				                       coolingMap->at(i, j+1) +
-				                       coolingMap->at(i, j-1)) / 4);
+    if (width > 0 && height > 0)
+    {
+        for (unsigned int i = 0; i < width; i++)
+            for (unsigned int j = 0; j < height; j++)
+                coolingMap->set(i, j, Utils::Random::between(INTENSITY_MIN,
+                                INTENSITY_PERCENT(intensity_normal)));
 
-	timer.start();
+        // Will smooth the cooling map a number of times
+        for (int n = 0; n < 10; n++)
+            for (unsigned int i = 1; i < width-1; i++)
+                for (unsigned int j = 1; j < height-1; j++)
+                    coolingMap->set(i, j, (coolingMap->at(i-1, j) +
+                                           coolingMap->at(i+1, j) +
+                                           coolingMap->at(i, j+1) +
+                                           coolingMap->at(i, j-1)) / 4);
+    }
+
+
+    GameEventsManager::registerListener(this, GameEventType::CLEAR_LINES_EVENT);
+    GameEventsManager::registerListener(this, GameEventType::HEIGHT_CHANGED_EVENT);
+    GameEventsManager::registerListener(this, GameEventType::START_GAME_EVENT);
+    GameEventsManager::registerListener(this, GameEventType::STOP_GAME_EVENT);
+
+    currentLineHeight = 0;
+
+    timer.start();
 }
 void AnimationFire::update()
 {
-	// Updating only at the right time!
-	if (timer.delta_ms() < 100)
-		return;
+    // Updating only at the right time!
+    if (timer.delta_ms() < 100)
+        return;
 
-	// How fast the fire cools down each frame
-	int cooling_ratio = Utils::Random::between(INTENSITY_PERCENT(3),
-	                                           INTENSITY_PERCENT(12));
+    // How fast the fire cools down each frame
+    double cooling_ratio = INTENSITY_PERCENT(Utils::Random::between(0., 10.) + (10 - currentLineHeight * 0.5));
 
-	// Slim chance of a sudden burst or dim of the fire
-	bool burst = Utils::Random::booleanWithChance(0.10);
-	bool dim   = Utils::Random::booleanWithChance(0.12);
-	if (burst) cooling_ratio = INTENSITY_PERCENT(1);
-	if (dim)   cooling_ratio = INTENSITY_PERCENT(30);
+    if (burstTimeLeft > 0)
+    {
+        cooling_ratio *= 0.3;
+        burstTimeLeft--;
+    }
 
-	// Spawning high-intensity flames on the bottom particles
-	for (unsigned int i = 0; i < (particle->width()); i++)
-		particle->set(i, particle->height() - 1, ParticleFire(Utils::Random::between(INTENSITY_PERCENT(90), INTENSITY_MAX)));
+    if (played == false)
+    {
+        cooling_ratio = 7;
+    }
 
-	// Randomly adding Sparks - high-intensity flames little higher
-	for (unsigned int i = 0; i < (particle->width()); i++)
-	{
-		if (Utils::Random::booleanWithChance(2.31))
-		{
-			int height = particle->height() - Utils::Random::between(3, 6);
+// Spawning high-intensity flames on the bottom particles
+    for (unsigned int i = 0; i < (particle->width()); i++)
+        particle->set(i, particle->height() - 1, ParticleFire(Utils::Random::between(INTENSITY_PERCENT(90), INTENSITY_MAX)));
 
-			particle->set(i, height, ParticleFire(Utils::Random::between(INTENSITY_PERCENT(90), INTENSITY_MAX)));
-		}
-	}
+    // Randomly adding Sparks - high-intensity flames little higher
+    for (unsigned int i = 0; i < (particle->width()); i++)
+    {
+        if (Utils::Random::booleanWithChance(2.31))
+        {
+            int height = particle->height() - Utils::Random::between(3, 6);
 
-	// Making all particles climb up
-	for (unsigned int i = 0; i < (particle->width()); i++)
-	{
-		for (unsigned int j = 0; j < (particle->height()-1); j++)
-		{
-			// Cooling all particles based on the ones below
-			particle->set(i, j, ParticleFire(particle->at(i, j + 1).intensity - cooling_ratio));
+            particle->set(i, height, ParticleFire(Utils::Random::between(INTENSITY_PERCENT(90), INTENSITY_MAX)));
+        }
+    }
 
-			// Cooling based on the cooling map
-			particle->set(i, j, ParticleFire(particle->at(i, j).intensity - coolingMap->at(i, j)));
-		}
-	}
+    // Making all particles climb up
+    for (unsigned int i = 0; i < (particle->width()); i++)
+    {
+        for (unsigned int j = 0; j < (particle->height()-1); j++)
+        {
+            // Cooling all particles based on the ones below
+            particle->set(i, j, ParticleFire(particle->at(i, j + 1).intensity - cooling_ratio));
 
-	timer.start();
+            // Cooling based on the cooling map
+            particle->set(i, j, ParticleFire(particle->at(i, j).intensity - coolingMap->at(i, j)));
+        }
+    }
+
+    timer.start();
 }
 void AnimationFire::draw()
 {
-	for (unsigned int i = 0; i < (particle->width()); i++)
-	{
-		for (unsigned int j = 0; j < (particle->height()); j++)
-		{
-			int       c = ' ';
-			ColorPair p = white;
-			int       s = particle->at(i, j).intensity;
+    for (unsigned int i = 0; i < (particle->width()); i++)
+    {
+        for (unsigned int j = 0; j < (particle->height()); j++)
+        {
+            int       c = ' ';
+            ColorPair p = white;
+            int       s = particle->at(i, j).intensity;
 
-			if (s > INTENSITY_PERCENT(90))
-				p = white;
+            if (s > INTENSITY_PERCENT(90))
+                p = white;
 
-			else if (s > INTENSITY_PERCENT(80))
-				p = yellowBold;
+            else if (s > INTENSITY_PERCENT(80))
+                p = yellowBold;
 
-			else if (s > INTENSITY_PERCENT(70))
-				p = yellowBold;
+            else if (s > INTENSITY_PERCENT(70))
+                p = yellowBold;
 
-			else if (s > INTENSITY_PERCENT(60))
-				p = yellow;
+            else if (s > INTENSITY_PERCENT(60))
+                p = yellow;
 
-			else if (s > INTENSITY_PERCENT(50))
-				p = redBold;
+            else if (s > INTENSITY_PERCENT(50))
+                p = redBold;
 
-			else if (s > INTENSITY_PERCENT(40))
-				p = redBold;
+            else if (s > INTENSITY_PERCENT(40))
+                p = redBold;
 
-			else if (s > INTENSITY_PERCENT(30))
-				p = red;
+            else if (s > INTENSITY_PERCENT(30))
+                p = red;
 
-			else if (s > INTENSITY_PERCENT(20))
-				p = red;
+            else if (s > INTENSITY_PERCENT(20))
+                p = red;
 
-			else
-				continue; // Too low intensity
+            else
+                continue; // Too low intensity
 
 
-			if ((s > INTENSITY_MAX) || (s < INTENSITY_MIN))
-				continue;
+            if ((s > INTENSITY_MAX) || (s < INTENSITY_MIN))
+                continue;
 
-			else
-				c = gray_scale[(s - INTENSITY_MIN) * (gray_scale_size-1)/INTENSITY_MAX];
+            else
+                c = gray_scale[(int)((s - INTENSITY_MIN) * (gray_scale_size-1)/INTENSITY_MAX)];
 
-			window->printChar(c, i, j, p);
-		}
-	}
+            window->printChar(c, i, j, p);
+        }
+    }
 }
 
+void AnimationFire::handleEvent(GameEvent event)
+{
+    switch(event.index())
+    {
+        case GameEventType::CLEAR_LINES_EVENT:
+            burstTimeLeft = std::get<GameEventType::CLEAR_LINES_EVENT>(event) * std::get<GameEventType::CLEAR_LINES_EVENT>(event) / 5 * clearDelay;
+            break;
+        case GameEventType::HEIGHT_CHANGED_EVENT:
+            currentLineHeight = std::get<GameEventType::HEIGHT_CHANGED_EVENT>(event);
+            break;
+        case GameEventType::START_GAME_EVENT:
+            played = true;
+            break;
+        case GameEventType::STOP_GAME_EVENT:
+            played = false;
+            break;
+        default:
+            break;
+    }
+}

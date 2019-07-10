@@ -18,9 +18,7 @@ LayoutMainMenu::LayoutMainMenu(int width, int height, GameStateMainMenu* state):
     Layout(width, height),
     state(state),
     logo(NULL),
-    menu(NULL),
-    animationContainer(NULL),
-    animation(NULL)
+    menu(NULL)
 {
     this->windowsInit();
 }
@@ -68,57 +66,17 @@ void LayoutMainMenu::windowsInit()
     int height = this->main->getH() - this->logo->getH() - 1;
     int posy   = this->main->getH() - height - 1;
 
-    this->animationContainer = new Window(this->main,
-                                          0, posy,
-                                          0, height);
-    this->animationContainer->borders(Window::BORDER_NONE);
+    // Now, the (optional) animation that will go
+    // behind the menu screen.
+    // this->animation = Globals::Profiles::current->getAnimation(this->animationContainer);
 
-    if (Globals::Profiles::current->settings.screen.animation_menu == "random")
-    {
-        // Deciding randomly the type of the Animation
-        switch(Utils::Random::between(0, 3))
-        {
-            case 0:
-                this->animation = new AnimationWater(this->animationContainer);
-                break;
-
-            case 1:
-                this->animation = new AnimationSnakes(this->animationContainer);
-                break;
-
-            case 2:
-                this->animation = new AnimationGameOfLife(this->animationContainer);
-                break;
-
-            default:
-                this->animation = new AnimationFire(this->animationContainer);
-                break;
-        }
-    }
-    else if (Globals::Profiles::current->settings.screen.animation_menu == "fire")
-        this->animation = new AnimationFire(this->animationContainer);
-
-    else if (Globals::Profiles::current->settings.screen.animation_menu == "water")
-        this->animation = new AnimationWater(this->animationContainer);
-
-    else if (Globals::Profiles::current->settings.screen.animation_menu == "snakes")
-        this->animation = new AnimationSnakes(this->animationContainer);
-
-    else if (Globals::Profiles::current->settings.screen.animation_menu == "life")
-        this->animation = new AnimationGameOfLife(this->animationContainer);
-
-    else
-        this->animation = NULL;
-
-    if (this->animation)
-        this->animation->load();
+    //if (this->animation)
+    //    this->animation->load();
 }
 void LayoutMainMenu::windowsExit()
 {
     SAFE_DELETE(this->menu);
     SAFE_DELETE(this->logo);
-    SAFE_DELETE(this->animationContainer);
-    SAFE_DELETE(this->animation);
 
     Layout::windowsExit();
 }
@@ -126,15 +84,6 @@ void LayoutMainMenu::draw(Menu* menu)
 {
     this->main->clear();
 
-    this->animationContainer->clear();
-
-    if (this->animation)
-    {
-        this->animation->update();
-        this->animation->draw();
-    }
-
-    this->animationContainer->refresh();
 
     this->logo->clear();
     this->logo->print(Utils::String::split(" __ __    ___ ______  ____   ____ _____\n"

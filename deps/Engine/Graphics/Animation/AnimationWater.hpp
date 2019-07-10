@@ -18,19 +18,21 @@
 /// Rules and behavior of the Water animation.
 class AnimationWater: public Animation
 {
-public:
-	AnimationWater(Window* window);
-	virtual ~AnimationWater();
+  public:
+    AnimationWater(Window* window);
+    virtual ~AnimationWater();
 
-	void load();
-	void update();
-	void draw();
+    void load();
+    void update();
+    void draw();
 
-private:
-	Array2D<int>* buffer1;
-	Array2D<int>* buffer2;
+    void handleEvent(GameEvent type) override;
 
-	Timer timer;
+  private:
+    Array2D<int>* buffer1;
+    Array2D<int>* buffer2;
+
+    Timer timer;
 };
 
 #endif //ANIMATIONWATER_H_DEFINED

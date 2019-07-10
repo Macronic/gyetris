@@ -10,18 +10,20 @@
 /// Rules and behavior of the GameOfLife animation.
 class AnimationGameOfLife: public Animation
 {
-public:
-	AnimationGameOfLife(Window* window);
-	virtual ~AnimationGameOfLife();
+  public:
+    AnimationGameOfLife(Window* window);
+    virtual ~AnimationGameOfLife();
 
-	void load();
-	void update();
-	void draw();
+    void load();
+    void update();
+    void draw();
 
-private:
-	Array2D<bool>* cells;
+    void handleEvent(GameEvent type) override;
 
-	Timer timer;
+  private:
+    Array2D<bool>* cells;
+
+    Timer timer;
 };
 
 #endif //ANIMATIONGAMEOFLIFE_H_DEFINED

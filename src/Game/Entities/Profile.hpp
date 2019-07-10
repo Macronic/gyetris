@@ -5,6 +5,12 @@
 #include <Game/Entities/ScoreFile.hpp>
 #include <Engine/Graphics/Colors.hpp>
 #include <Engine/EngineGlobals.hpp>
+#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Animation/AnimationFire.hpp>
+#include <Engine/Graphics/Animation/AnimationGameOfLife.hpp>
+#include <Engine/Graphics/Animation/AnimationSnakes.hpp>
+#include <Engine/Graphics/Animation/AnimationWater.hpp>
+
 
 #include <vector>
 #include <string>
@@ -101,12 +107,22 @@ class Profile
     /// Saves current settings on the user configuration file.
     void saveSettings();
 
+    /// Sets this profile as a default
+    void setAsDefault();
+
+    /// Does both save settings and sets profile as default
+    void save();
+
     /// Apply the visual settings directly on the Game Engine.
     ///
     /// After that you should restart the current Layout and you'll
     /// see the changes immediately.
     void applyGraphicalSettings();
 
+    /// Returns now animation based of a argument
+    ///
+    /// If the argument is empty, it uses saved settings.
+    Animation* getAnimation(Window* window, std::string animationName = "");
     /// Contains all the settings for this individual Profile.
     ///
     /// Look, I know it's ugly as fuark to call huge-ass

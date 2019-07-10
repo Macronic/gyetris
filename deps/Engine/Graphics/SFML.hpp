@@ -2,21 +2,19 @@
 #include <SFML/Graphics.hpp>
 #include <Engine/EngineGlobals.hpp>
 #include <GUI/EventHandler.h>
+#include <Engine/Graphics/Window.hpp>
+
 #ifndef SFML_H_DEFINED
 #define SFML_H_DEFINED
 
 namespace SFML
 {
-    /// Initializes Ncurses mode.
+    /// Initializes SFML window.
     ///
     /// The whole Engine depends on this.
     bool init();
 
-    /// Quits Ncurses mode.s
-    ///
-    /// Make sure to call it at the end of the game,
-    /// otherwise the terminal will be left at a
-    /// strange state.
+    /// Quits SFML, destroying window
     void exit();
 
     /// Returns a pressed character within a
@@ -35,7 +33,7 @@ namespace SFML
     size_t getHeight();
     size_t getWidth();
 
-    void drawTarget(sf::Drawable* drawable);
+    void drawTarget(std::shared_ptr<sf::Drawable> drawable);
     void display();
 }
 

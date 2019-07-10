@@ -2,7 +2,7 @@
 #define ANIMATION_H_DEFINED
 
 #include <Engine/Graphics/Window.hpp>
-
+#include <Engine/Flow/GameEventsManager.hpp>
 /// Animations that can happen on any Window you want.
 /// You just create a Window, select an Animation and throw it
 /// inside - done!
@@ -25,27 +25,34 @@
 /// override all these methods. Follow the examples seen on the
 /// existing animations.
 ///
-class Animation
+class Animation : public GameEventListener
 {
-public:
-	/// Creates an Animation that will occur on #window.
-	Animation(Window* window):
-		window(window)
-	{ };
+  public:
+    /// Creates an Animation that will occur on #window.
+    Animation(Window* window):
+        window(window)
+    { };
 
-	virtual ~Animation() {};
+    Animation() : window(nullptr) {}
 
-	/// Loads all internal things.
-	virtual void load() = 0;
+    void setWindow(Window* window)
+    {
+        this->window = window;
+    }
 
-	/// Updates Animation's internal state.
-	virtual void update() = 0;
+    virtual ~Animation() {};
 
-	/// Shows Animation on the screen.
-	virtual void draw() = 0;
+    /// Loads all internal things.
+    virtual void load() = 0;
 
-protected:
-	Window* window;
+    /// Updates Animation's internal state.
+    virtual void update() = 0;
+
+    /// Shows Animation on the screen.
+    virtual void draw() = 0;
+
+  protected:
+    Window* window;
 };
 
 #endif //ANIMATION_H_DEFINED

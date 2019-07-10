@@ -28,7 +28,7 @@ void Board::draw(Window* win)
         for (int j = 0; j < height; j++)
             if (this->block[i][j])
                 this->block[i][j]->draw(win,
-                                        this->x + i, // 2 chars
+                                        this->x + i,
                                         this->y + j);
 }
 void Board::lockPiece(Piece* p)
@@ -233,6 +233,28 @@ int Board::getH()
 {
     return this->height;
 }
+int Board::getTrueH()
+{
+    for (int j = this->height - 1; j >= 0; j--)
+    {
+        bool wasAtThisHeight = false;
+        for (int i = 0; i < (this->width); i++)
+        {
+            if (this->block[i][j])
+            {
+                wasAtThisHeight = true;
+                break;
+            }
+        }
+
+        if (!wasAtThisHeight)
+        {
+            return std::max(0, this->height - j - 1);
+        }
+    }
+
+    return this->height;
+}
 void Board::turnInvisible(bool option)
 {
     for (int i = 0; i < (this->width); i++)
@@ -249,4 +271,5 @@ void Board::turnInvisible(bool option)
                     this->block[i][j] = Globals::Profiles::current->settings.theme.piece;
             }
 }
+
 

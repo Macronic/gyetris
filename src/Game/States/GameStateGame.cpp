@@ -28,10 +28,12 @@ void GameStateGame::load()
 
     this->game = new Game();
     this->game->start();
+    GameEventsManager::sendEvent(GameEvent(std::in_place_index<GameEventType::START_GAME_EVENT>, std::monostate()));
 }
 void GameStateGame::unload()
 {
     SAFE_DELETE(this->game);
+    GameEventsManager::sendEvent(GameEvent(std::in_place_index<GameEventType::STOP_GAME_EVENT>, std::monostate()));
 }
 void GameStateGame::update()
 {

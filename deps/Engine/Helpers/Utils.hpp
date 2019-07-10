@@ -3,36 +3,42 @@
 
 #include <string>
 #include <vector>
+#include <random>
 
 /// Random useful things accumulated over the years.
 ///
 namespace Utils
 {
-	/// Better random number generator.
-	namespace Random
-	{
-		/// Must be called before any of those.
-		void seed();
+    /// Better random number generator.
+    namespace Random
+    {
+        extern std::default_random_engine generator;
+        extern std::uniform_real_distribution<double> distribution;
+        extern std::random_device device;
 
-		/// Random number between `min` and `max`.
-		int between(int min, int max);
+        /// Random number between `min` and `max`.
+        int between(int min, int max);
+        double between(double min, double max);
 
-		/// Random boolean.
-		bool boolean();
+        /// Initializing a random number generator. Always call it at the start of the application.
+        void init();
 
-		/// Random boolean with chance of #percent.
-		///
-		/// @param percent A float between 0 and 1
-		///
-		/// @note Precision up to 2 decimal digits.
-		bool booleanWithChance(float percent);
-	};
+        /// Random boolean.
+        bool boolean();
 
-	namespace Time
-	{
-		/// Stops execution for #delay microseconds.
-		void delay_ms(int delay);
-	};
+        /// Random boolean with chance of #percent.
+        ///
+        /// @param percent A float between 0 and 1
+        ///
+        /// @note Precision up to 2 decimal digits.
+        bool booleanWithChance(float percent);
+    };
+
+    namespace Time
+    {
+        /// Stops execution for #delay microseconds.
+        void delay_ms(int delay);
+    };
 };
 
 // Useful #defines collected over the years.

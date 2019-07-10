@@ -1,3 +1,4 @@
+
 #ifndef WINDOW_H_DEFINED
 #define WINDOW_H_DEFINED
 
@@ -12,6 +13,7 @@
 /// Handy alias to make child Windows stretch their sizes to
 /// the maximum allowed by the parent.
 #define WINDOW_FILL 0
+
 
 /// A segment of the terminal screen (2D char matrix).
 ///
@@ -56,10 +58,10 @@ class Window
 
     void clear();
 
-    int getW() const;
-    int getH() const;
-    int getX() const;
-    int getY() const;
+    unsigned int getW() const;
+    unsigned int getH() const;
+    unsigned int getX() const;
+    unsigned int getY() const;
 
     /// Applies border of #type to this Window.
     void borders(BorderType type);
@@ -89,10 +91,10 @@ class Window
   protected:
     Window* parent;
 
-    int x;
-    int y;
-    int width;
-    int height;
+    unsigned int x;
+    unsigned int y;
+    unsigned int width;
+    unsigned int height;
 
     std::shared_ptr<DrawQueue> drawQueue;
 

@@ -25,7 +25,8 @@ void StateManager::quit()
 
 
 StateManager::StateManager():
-    currentState(NULL)
+    currentState(NULL),
+    backgroundWindow(0, 0, SFML::getWidth(), SFML::getHeight())
 { }
 StateManager::~StateManager()
 {
@@ -34,14 +35,21 @@ StateManager::~StateManager()
 
     SAFE_DELETE(this->currentState);
 }
-void StateManager::run(GameState* initialState)
+void StateManager::run(GameState* initialState, Animation* initialAnimation)
 {
     if (! initialState)
         throw "No initial state given to StateManager";
 
-    this->currentState = initialState;
-    this->currentState->load();
+    if (initialAnimation != nullptr)
+    {
+        initialAnimation->setWindow(&backgroundWindow);
+        initialAnimation->load();
 
+    }
+
+    this->currentState = initialState;
+
+    this->currentState->load();
     // Oohh yeah, the main game loop!
     while (true)
     {
@@ -49,17 +57,25 @@ void StateManager::run(GameState* initialState)
         {
             InputManager::update();
 
+            if (initialAnimation != nullptr)
+                initialAnimation->update();
+
+            backgroundWindow.refresh();
+
             this->currentState->update();
+
+            if (initialAnimation != nullptr)
+                initialAnimation->draw();
 
             if (this->currentState)
                 this->currentState->draw();
 
             SFML::display();
+            backgroundWindow.clear();
             // This makes sure the game doesn't keep wasting
             // 99% CPU when running.
             // TODO: I should probably adjust this delay to
             // better match the running machine.
-            Utils::Time::delay_ms(100);
         }
         // Special type of exception used to
         // instantaneously change from one state

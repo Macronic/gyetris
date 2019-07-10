@@ -1,6 +1,7 @@
 #include <Engine/Graphics/SFML.hpp>
 #include <iostream>
 #include <GUI/EventHandler.h>
+#include <Game/Config/Globals.hpp>
 
 namespace SFML
 {
@@ -8,6 +9,9 @@ namespace SFML
     bool wasSomethingDrawn = false;
 
     std::vector<EventHandler*> handlers;
+
+    DrawQueue queue;
+
     bool init()
     {
         if (SFML::window != nullptr)
@@ -15,7 +19,7 @@ namespace SFML
 
         SFML::window = new sf::RenderWindow;
         SFML::window->create(sf::VideoMode(80 * EngineGlobals::Graphics::fontSize, 40 * EngineGlobals::Graphics::fontSize), "gyetris");
-
+        SFML::window->setFramerateLimit(60);
         return true;
     }
 
@@ -24,7 +28,6 @@ namespace SFML
         if (SFML::window != nullptr)
         {
             SFML::window->close();
-
             delete SFML::window;
             SFML::window = nullptr;
         }
@@ -34,7 +37,7 @@ namespace SFML
     {
         sf::Event event;
 
-        while (window->pollEvent(event))
+        while (window != nullptr && window->pollEvent(event))
         {
             bool handled = false;
             for (EventHandler* handler : handlers)
@@ -52,11 +55,13 @@ namespace SFML
             switch (event.type)
             {
                 case sf::Event::Closed:
-                    window->close();
                     exit();
+                    Globals::save();
+                    std::exit(0);
                     break;
                 case sf::Event::Resized:
                     window->setSize(sf::Vector2u(event.size.width, event.size.height));
+                    break;
                 case sf::Event::KeyPressed:
                     return event.key.code;
                     break;
@@ -82,12 +87,12 @@ namespace SFML
         return window->getSize().y / EngineGlobals::Graphics::fontSize;
     }
 
-    void drawTarget(sf::Drawable* drawable)
+    void drawTarget(std::shared_ptr<sf::Drawable> drawable)
     {
+        queue.add(drawable);
         if (window == nullptr)
             return;
 
-        window->draw(*drawable);
         wasSomethingDrawn = true;
     }
 
@@ -98,11 +103,12 @@ namespace SFML
             if (window == nullptr)
                 return;
 
+            window->draw(queue);
+            queue.clear();
             window->display();
             wasSomethingDrawn = false;
-            window->clear();
+            window->clear(sf::Color::Black);
         }
-
     }
 
     void addEventHandler(EventHandler* handler)
@@ -133,5 +139,4 @@ namespace SFML
             }
         }
     }
-
 }

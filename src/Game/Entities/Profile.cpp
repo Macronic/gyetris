@@ -594,6 +594,41 @@ void Profile::saveSettings()
     SAFE_DELETE(ini);
 }
 
+void Profile::setAsDefault()
+{
+    INI::Parser* ini;
+    try
+    {
+        ini = new INI::Parser(Globals::Config::file);
+    }
+    catch(std::runtime_error& e)
+    {
+        // File doesn't exist!
+        // Silently create
+        ini = new INI::Parser();
+        ini->create();
+    }
+    ini->top().addGroup("profiles");
+    (*ini)("profiles").addKey("default", name);
+    try
+    {
+        ini->saveAs(Globals::Config::file);
+    }
+    catch(std::runtime_error& e)
+    {
+        // Couldn't save the file...
+        // ...do nothing
+    }
+    SAFE_DELETE(ini);
+
+}
+
+void Profile::save()
+{
+    saveSettings();
+    setAsDefault();
+}
+
 void Profile::applyGraphicalSettings()
 {
     EngineGlobals::Screen::center_horizontally = this->settings.screen.center_horizontally;
@@ -601,5 +636,42 @@ void Profile::applyGraphicalSettings()
     EngineGlobals::Screen::show_borders        = this->settings.screen.show_borders;
     EngineGlobals::Screen::fancy_borders       = this->settings.screen.fancy_borders;
     EngineGlobals::Screen::outer_border        = this->settings.screen.outer_border;
+}
+
+Animation* Profile::getAnimation(Window* window, std::string animationName)
+{
+    if (animationName == "" && settings.screen.animation_menu != "")
+        return getAnimation(window, settings.screen.animation_menu);
+    else if (animationName == "" && settings.screen.animation_game != "")
+        return getAnimation(window, settings.screen.animation_game);
+    std::cout << "anim: " << animationName << std::endl;
+    if (animationName == "random")
+    {
+        // Deciding randomly the type of the Animation
+        switch(Utils::Random::between(0, 3))
+        {
+            case 0:
+                return new AnimationWater(window);
+            case 1:
+                return new AnimationSnakes(window);
+            case 2:
+                return new AnimationGameOfLife(window);
+            default:
+                return new AnimationFire(window);
+        }
+    }
+    else if (animationName == "fire")
+        return new AnimationFire(window);
+
+    else if (animationName == "water")
+        return new AnimationWater(window);
+
+    else if (animationName== "snakes")
+        return new AnimationSnakes(window);
+
+    else if (animationName == "life")
+        return new AnimationGameOfLife(window);
+
+    return new AnimationFire(window);
 }
 

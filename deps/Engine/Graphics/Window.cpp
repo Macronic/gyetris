@@ -49,6 +49,7 @@ Window::Window(Window* parent, int x, int y, int width, int height):
 
     this->x = x;
     this->y = y;
+
     this->width  = width;
     this->height = height;
 
@@ -122,7 +123,7 @@ void Window::refresh()
 
     if (parent == nullptr)
     {
-        SFML::drawTarget(drawQueue.get());
+        SFML::drawTarget(drawQueue);
     }
     else
     {
@@ -168,19 +169,19 @@ void Window::clear()
                     EngineGlobals::Theme::hilite_hilite_text);
     }
 }
-int Window::getW() const
+unsigned int Window::getW() const
 {
     return this->width;
 }
-int Window::getH() const
+unsigned int Window::getH() const
 {
     return this->height;
 }
-int Window::getX() const
+unsigned int Window::getX() const
 {
     return this->x;
 }
-int Window::getY() const
+unsigned int Window::getY() const
 {
     return this->y;
 }

@@ -112,3 +112,4 @@ void AnimationWater::draw()
     }
 }
 
+void AnimationWater::handleEvent(GameEvent event) { }

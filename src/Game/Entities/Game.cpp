@@ -6,6 +6,7 @@
 #include <Game/Display/Layouts/LayoutGame.hpp>
 #include <Engine/InputManager.hpp>
 #include <Game/Entities/Profile.hpp>
+#include <Engine/Flow/GameEventsManager.hpp>
 
 #include <stdlib.h>
 
@@ -320,6 +321,8 @@ void Game::update()
                 break; // someone's cheating...
         }
 
+        GameEventsManager::sendEvent(GameEvent(std::in_place_index<GameEventType::CLEAR_LINES_EVENT>, lines));
+
         Globals::Profiles::current->scores->score.points += line_score;
     }
 
@@ -337,6 +340,8 @@ void Game::update()
     // Checking if game over
     if (this->board->isFull())
         this->gameOver = true;
+
+    GameEventsManager::sendEvent(GameEvent(std::in_place_index<GameEventType::HEIGHT_CHANGED_EVENT>, this->board->getTrueH()));
 
     // If on invisible mode, will flash the pieces
     // once in a while

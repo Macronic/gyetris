@@ -24,43 +24,43 @@
 #include <unistd.h>    // usleep()
 #include <algorithm>
 
-// C++11 compatibility
-// I wish I could use those:
-// #include <utility>
-// #include <random>
-
 //  ___    __    _      ___   ___   _
 // | |_)  / /\  | |\ | | | \ / / \ | |\/|
 // |_| \ /_/--\ |_| \| |_|_/ \_\_/ |_|  |
 
-void Utils::Random::seed()
-{
-	// Poor choice for random numbers, I know
-	// I wish I could use C++11's random generators...
-	srand(time(NULL));
-}
+std::default_random_engine Utils::Random::generator;
+std::uniform_real_distribution<double> Utils::Random::distribution(0.0, 1.0);
+std::random_device Utils::Random::device;
 
 int Utils::Random::between(int min, int max)
 {
-	if (min > max)
-		std::swap(min, max);
+    if (min > max)
+        std::swap(min, max);
 
-	return (rand() % (max - min + 1) + min);
+    return std::uniform_int_distribution(min, max)(generator);
+}
+
+double Utils::Random::between(double min, double max)
+{
+    if (min > max)
+        std::swap(min, max);
+
+    return (distribution(generator) * (max - min) + min);
 }
 
 bool Utils::Random::boolean()
 {
-	// If a random number between 0 and 9 is even
-	int random_int = Utils::Random::between(0, 9);
+    // If a random number between 0 and 9 is even
+    int random_int = Utils::Random::between(0, 9);
 
-	return ((random_int % 2) == 0);
+    return ((random_int % 2) == 0);
 }
 
 bool Utils::Random::booleanWithChance(float percent)
 {
-	int x = Utils::Random::between(0, 99);
+    int x = Utils::Random::between(0, 99);
 
-	return (x < (percent * 100));
+    return (x < (percent * 100));
 }
 
 // _____  _   _      ____
@@ -69,6 +69,11 @@ bool Utils::Random::booleanWithChance(float percent)
 
 void Utils::Time::delay_ms(int delay)
 {
-	usleep((useconds_t)delay * 100);
+    usleep((useconds_t)delay * 100);
 }
 
+
+void Utils::Random::init()
+{
+    Utils::Random::generator = std::default_random_engine(device());
+}

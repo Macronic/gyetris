@@ -10,38 +10,40 @@
 
 struct LilSnake
 {
-	int x;
-	int y;
-	int size;
+    int x;
+    int y;
+    int size;
 
-	LilSnake(int x, int y, int size):
-		x(x),
-		y(y),
-		size(size)
-	{ }
+    LilSnake(int x, int y, int size):
+        x(x),
+        y(y),
+        size(size)
+    { }
 };
 
 /// Rules and behavior of the Fire animation.
 class AnimationSnakes: public Animation
 {
-public:
-	AnimationSnakes(Window* window);
-	virtual ~AnimationSnakes() {};
+  public:
+    AnimationSnakes(Window* window);
+    virtual ~AnimationSnakes() {};
 
-	void load();
-	void update();
-	void draw();
+    void load();
+    void update();
+    void draw();
 
-private:
-	std::vector<LilSnake> lilsnakes;
+    void handleEvent(GameEvent type) override;
 
-	/// Timer to update all snakes.
-	Timer updateTimer;
+  private:
+    std::vector<LilSnake> lilsnakes;
 
-	/// Timer to add another snake.
-	Timer addTimer;
+    /// Timer to update all snakes.
+    Timer updateTimer;
 
-	void addSnake();
+    /// Timer to add another snake.
+    Timer addTimer;
+
+    void addSnake();
 };
 
 #endif //ANIMATIONSNAKES_H_DEFINED

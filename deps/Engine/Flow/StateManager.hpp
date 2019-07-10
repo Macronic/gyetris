@@ -3,6 +3,8 @@
 
 #include <Engine/Flow/GameState.hpp>
 #include <Engine/Graphics/SFML.hpp>
+#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Window.hpp>
 #include <exception>
 
 /// Custom exception that's used to instantly
@@ -69,10 +71,12 @@ class StateManager
     ///
     /// If we leave this method, the game quits, as seen on
     /// *main.cpp*.
-    void run(GameState* initialState);
+    void run(GameState* initialState, Animation* initialAnimation);
 
   private:
     GameState* currentState;
+    Animation* currentBackground;
+    Window backgroundWindow;
 };
 
 #endif /* STATEMANAGER_H_DEFINED */
