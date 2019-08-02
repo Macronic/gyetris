@@ -25,13 +25,13 @@ class Window
         BORDER_NONE, BORDER_REGULAR, BORDER_FANCY
     };
 
-    Window(int x, int y, int w, int h);
+    Window(unsigned int x, unsigned int y, unsigned int w, unsigned int h);
 
-    Window(Window* parent, int x, int y, int width, int height);
+    Window(Window* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height);
 
     virtual ~Window();
 
-    virtual void resize(int w, int h);
+    virtual void resize(unsigned int w, unsigned int h);
 
     /// Shows text #str at #x #y on the window with color #pair.
     ///

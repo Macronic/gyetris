@@ -1,7 +1,7 @@
 #ifndef ANIMATIONFIRE_H_DEFINED
 #define ANIMATIONFIRE_H_DEFINED
 
-#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Animation/AnimationLegacy.hpp>
 #include <Engine/Helpers/Array2D.hpp>
 #include <Engine/Helpers/Timer.hpp>
 
@@ -28,7 +28,7 @@ struct ParticleFire
 };
 
 /// Shows a nice fire animation on the screen.
-class AnimationFire: public Animation
+class AnimationFire: public AnimationLegacy
 {
   public:
     AnimationFire(Window* window);

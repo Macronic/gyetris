@@ -12,7 +12,7 @@ static int gray_scale_size = 11;
 static char gray_scale[12] = "#@%#*+=-:'.";
 
 AnimationWater::AnimationWater(Window* window):
-    Animation(window),
+    AnimationLegacy(window),
     buffer1(NULL),
     buffer2(NULL)
 { }
@@ -41,6 +41,7 @@ void AnimationWater::load()
     }
 
     timer.start();
+    AnimationLegacy::load();
 }
 void AnimationWater::update()
 {
@@ -75,6 +76,7 @@ void AnimationWater::update()
     }
 
     timer.start();
+    AnimationLegacy::update();
 }
 void AnimationWater::draw()
 {
@@ -107,9 +109,11 @@ void AnimationWater::draw()
             else
                 c = gray_scale[(s - HEIGHT_MIN) * (gray_scale_size-1)/HEIGHT_MAX];
 
-            window->printChar(c, i, j, p);
+            print(std::string(1, c), i, j, p.foreground);
         }
     }
+
+    AnimationLegacy::draw();
 }
 
 void AnimationWater::handleEvent(GameEvent event) { }

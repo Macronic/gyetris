@@ -7,7 +7,7 @@ namespace SFML
 {
     sf::RenderWindow* window = nullptr;
     bool wasSomethingDrawn = false;
-
+    sf::Text text;
     std::vector<EventHandler*> handlers;
 
     DrawQueue queue;
@@ -20,6 +20,8 @@ namespace SFML
         SFML::window = new sf::RenderWindow;
         SFML::window->create(sf::VideoMode(80 * EngineGlobals::Graphics::fontSize, 40 * EngineGlobals::Graphics::fontSize), "gyetris");
         SFML::window->setFramerateLimit(60);
+
+        text = sf::Text("", *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize);
         return true;
     }
 
@@ -138,5 +140,14 @@ namespace SFML
                 i--;
             }
         }
+    }
+
+    void printStringOn(std::string string, size_t x, size_t y, sf::RenderTarget& target, sf::Color color)
+    {
+        text.setString(string);
+        text.setFillColor(color);
+        text.setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
+
+        target.draw(text);
     }
 }

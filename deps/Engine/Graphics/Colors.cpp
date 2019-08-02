@@ -21,6 +21,11 @@ std::string Color::toString()
             Utils::String::toString(this->blue));
 }
 
+Color::operator sf::Color()
+{
+    return sf::Color(red, green, blue);
+}
+
 Color Color::fromString(std::string str)
 {
     if (str.find(",") == std::string::npos)

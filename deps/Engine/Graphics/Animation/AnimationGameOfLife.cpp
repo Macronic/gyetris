@@ -6,7 +6,7 @@ static ColorPair white;
 static ColorPair yellow = Colors::pair("yellow", "default");
 
 AnimationGameOfLife::AnimationGameOfLife(Window* window):
-    Animation(window),
+    AnimationLegacy(window),
     cells(NULL)
 { }
 AnimationGameOfLife::~AnimationGameOfLife()
@@ -26,6 +26,7 @@ void AnimationGameOfLife::load()
             cells->set(i, j, Utils::Random::booleanWithChance(0.20));
 
     timer.start();
+    AnimationLegacy::load();
 }
 void AnimationGameOfLife::update()
 {
@@ -84,6 +85,7 @@ void AnimationGameOfLife::update()
     }
 
     timer.start();
+    AnimationLegacy::update();
 }
 void AnimationGameOfLife::draw()
 {
@@ -99,9 +101,11 @@ void AnimationGameOfLife::draw()
                 c = '#';
                 p = yellow;
             }
-            window->printChar(c, i, j, p);
+            print(std::string(1, c), i, j, p.foreground);
         }
     }
+
+    AnimationLegacy::draw();
 }
 
 void AnimationGameOfLife::handleEvent(GameEvent event) { }

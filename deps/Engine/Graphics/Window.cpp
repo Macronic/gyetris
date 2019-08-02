@@ -4,7 +4,7 @@
 #include <sstream>				// stringstream
 #include <iostream>
 
-Window::Window(int x, int y, int w, int h):
+Window::Window(unsigned int x, unsigned int y, unsigned int w, unsigned int h):
     parent(nullptr),
     x(x),
     y(y),
@@ -20,7 +20,7 @@ Window::Window(int x, int y, int w, int h):
     this->setBorders();
 }
 
-Window::Window(Window* parent, int x, int y, int width, int height):
+Window::Window(Window* parent, unsigned int x, unsigned int y, unsigned int width, unsigned int height):
     drawQueue(new DrawQueue),
     borderType(BORDER_NONE),
     topLeftTitle(""),
@@ -59,7 +59,7 @@ Window::Window(Window* parent, int x, int y, int width, int height):
 
 Window::~Window() { }
 
-void Window::resize(int w, int h)
+void Window::resize(unsigned int w, unsigned int h)
 {
     this->width  = w;
     this->height = h;
@@ -74,11 +74,7 @@ void Window::print(std::string str, int x, int y, ColorPair pair)
     auto text = std::shared_ptr<sf::Text>(new sf::Text(str, *EngineGlobals::Graphics::font, EngineGlobals::Graphics::fontSize));
     text->setFillColor(sf::Color(pair.foreground.red, pair.foreground.green, pair.foreground.blue));
     text->setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
-    auto rectangle = std::shared_ptr<sf::RectangleShape>(new sf::RectangleShape(sf::Vector2f(str.length() * EngineGlobals::Graphics::fontSize, 1 * EngineGlobals::Graphics::fontSize)));
-    rectangle->setPosition(x * EngineGlobals::Graphics::fontSize, y * EngineGlobals::Graphics::fontSize);
-    rectangle->setFillColor(sf::Color(pair.background.red, pair.background.green, pair.background.blue));
 
-    drawQueue->add(rectangle);
     drawQueue->add(text);
 }
 

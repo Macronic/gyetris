@@ -1,7 +1,7 @@
 #ifndef ANIMATIONSNAKES_H_DEFINED
 #define ANIMATIONSNAKES_H_DEFINED
 
-#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Animation/AnimationLegacy.hpp>
 #include <Engine/Helpers/Timer.hpp>
 
 #include <vector>
@@ -22,7 +22,7 @@ struct LilSnake
 };
 
 /// Rules and behavior of the Fire animation.
-class AnimationSnakes: public Animation
+class AnimationSnakes: public AnimationLegacy
 {
   public:
     AnimationSnakes(Window* window);

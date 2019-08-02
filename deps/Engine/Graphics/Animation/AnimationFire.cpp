@@ -20,7 +20,7 @@ static int intensity_more = 20;
 static int clearDelay = 5;
 
 AnimationFire::AnimationFire(Window* window):
-    Animation(window),
+    AnimationLegacy(window),
     particle(NULL),
     burstTimeLeft(0),
     played(false)
@@ -66,7 +66,9 @@ void AnimationFire::load()
     currentLineHeight = 0;
 
     timer.start();
+    AnimationLegacy::load();
 }
+
 void AnimationFire::update()
 {
     // Updating only at the right time!
@@ -116,6 +118,7 @@ void AnimationFire::update()
     }
 
     timer.start();
+    AnimationLegacy::update();
 }
 void AnimationFire::draw()
 {
@@ -161,10 +164,12 @@ void AnimationFire::draw()
             else
                 c = gray_scale[(int)((s - INTENSITY_MIN) * (gray_scale_size-1)/INTENSITY_MAX)];
 
-            window->printChar(c, i, j, p);
+            print(std::string(1, (char)c), i, j, p.foreground);
         }
     }
+    AnimationLegacy::draw();
 }
+
 
 void AnimationFire::handleEvent(GameEvent event)
 {

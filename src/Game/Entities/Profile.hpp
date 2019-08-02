@@ -10,6 +10,7 @@
 #include <Engine/Graphics/Animation/AnimationGameOfLife.hpp>
 #include <Engine/Graphics/Animation/AnimationSnakes.hpp>
 #include <Engine/Graphics/Animation/AnimationWater.hpp>
+#include <Engine/Graphics/Animation/AnimationShader.hpp>
 
 
 #include <vector>
@@ -153,7 +154,7 @@ class Profile
             /// Which animation to show on the background of the main menu.
             ///
             /// Options (so far):
-            ///     "random", "fire", "water", "snakes", "life" and "none"
+            ///     "random", "fire", "water", "snakes", "life", "hex" and "none"
             std::string animation_menu;
 
             /// Same as above, but during the game.

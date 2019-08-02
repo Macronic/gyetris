@@ -35,6 +35,7 @@ namespace SFML
 
     void drawTarget(std::shared_ptr<sf::Drawable> drawable);
     void display();
+    void printStringOn(std::string string, size_t x, size_t y, sf::RenderTarget& target, sf::Color color = sf::Color::White);
 }
 
 #endif //SFML_H_DEFINED

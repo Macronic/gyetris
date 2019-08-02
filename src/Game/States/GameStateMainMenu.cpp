@@ -636,6 +636,7 @@ void GameStateMainMenu::createGUIOptionsMenu()
     options.push_back("water");
     options.push_back("snakes");
     options.push_back("life");
+    options.push_back("hex");
     options.push_back("none");
 
     MenuItemTextlist* list;

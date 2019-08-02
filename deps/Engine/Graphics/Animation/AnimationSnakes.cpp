@@ -3,7 +3,7 @@
 #include <Engine/Helpers/Utils.hpp>
 
 AnimationSnakes::AnimationSnakes(Window* window):
-    Animation(window)
+    AnimationLegacy(window)
 { }
 void AnimationSnakes::load()
 {
@@ -11,6 +11,8 @@ void AnimationSnakes::load()
 
     updateTimer.start();
     addTimer.start();
+
+    AnimationLegacy::load();
 }
 void AnimationSnakes::update()
 {
@@ -53,25 +55,29 @@ void AnimationSnakes::update()
         }
         updateTimer.start();
     }
+
+    AnimationLegacy::update();
 }
 void AnimationSnakes::draw()
 {
     for (unsigned int i = 0; i < (this->lilsnakes.size()); i++)
     {
-        window->printChar('@',
-                          this->lilsnakes[i].x,
-                          this->lilsnakes[i].y,
-                          Colors::pair("green", "default", true));
+        print(std::string(1, '@'),
+              this->lilsnakes[i].x,
+              this->lilsnakes[i].y,
+              Colors::name("green"));
 
         for (int j = 1; j < (this->lilsnakes[i].size); j++)
         {
-            window->printChar('o',
-                              this->lilsnakes[i].x,
-                              this->lilsnakes[i].y - j,
-                              Colors::pair("green", "default"));
+            print(std::string(1, 'o'),
+                  this->lilsnakes[i].x,
+                  this->lilsnakes[i].y - j,
+                  Colors::name("green"));
 
         }
     }
+
+    AnimationLegacy::draw();
 }
 void AnimationSnakes::addSnake()
 {

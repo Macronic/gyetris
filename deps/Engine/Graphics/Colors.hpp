@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include <SFML/Graphics/Color.hpp>
+
 /// Default color of the current terminal.
 ///
 /// This is the color your terminal has - both for
@@ -48,6 +50,9 @@ struct Color
     ///
     /// The format is "red,green,blue".
     std::string toString();
+
+    /// Returns a SFML::Color, representing this color
+    operator sf::Color();
 
     /// Makes a color according to a string
     /// representation of a Color.

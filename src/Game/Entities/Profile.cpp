@@ -648,7 +648,7 @@ Animation* Profile::getAnimation(Window* window, std::string animationName)
     if (animationName == "random")
     {
         // Deciding randomly the type of the Animation
-        switch(Utils::Random::between(0, 3))
+        switch(Utils::Random::between(0, 4))
         {
             case 0:
                 return new AnimationWater(window);
@@ -656,6 +656,8 @@ Animation* Profile::getAnimation(Window* window, std::string animationName)
                 return new AnimationSnakes(window);
             case 2:
                 return new AnimationGameOfLife(window);
+            case 3:
+                return new AnimationShader(window, "nullbackvert.vert", "hexbackvert.vert");
             default:
                 return new AnimationFire(window);
         }
@@ -666,11 +668,14 @@ Animation* Profile::getAnimation(Window* window, std::string animationName)
     else if (animationName == "water")
         return new AnimationWater(window);
 
-    else if (animationName== "snakes")
+    else if (animationName == "snakes")
         return new AnimationSnakes(window);
 
     else if (animationName == "life")
         return new AnimationGameOfLife(window);
+
+    else if (animationName == "hex")
+        return new AnimationShader(window, "nullbackvert.vert", "hexbackvert.vert");
 
     return new AnimationFire(window);
 }

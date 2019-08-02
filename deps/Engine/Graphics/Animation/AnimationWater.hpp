@@ -1,7 +1,7 @@
 #ifndef ANIMATIONWATER_H_DEFINED
 #define ANIMATIONWATER_H_DEFINED
 
-#include <Engine/Graphics/Animation.hpp>
+#include <Engine/Graphics/Animation/AnimationLegacy.hpp>
 #include <Engine/Helpers/Array2D.hpp>
 #include <Engine/Helpers/Timer.hpp>
 
@@ -16,7 +16,7 @@
 	(x * (100/(HEIGHT_MAX - HEIGHT_MIN)))
 
 /// Rules and behavior of the Water animation.
-class AnimationWater: public Animation
+class AnimationWater: public AnimationLegacy
 {
   public:
     AnimationWater(Window* window);
